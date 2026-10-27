@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#fdf3e7">
+<title>Nuestra Casa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   ESTILOS (colores tiernos / acogedores)
+   ========================================================= */
+:root{
+  --bg:#fdf3e7; --card:#fffaf3; --ink:#5a4636; --soft:#a68b74;
+  --rosa:#e88d8d; --menta:#8cc7a1; --linea:#ead8c4;
+  --piso1:#ecd0ad; --piso2:#e4c39c; --pared:#f6d6d0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
+  font-family:"Nunito",ui-rounded,system-ui,sans-serif;font-weight:600;overscroll-behavior:none}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+input{font:inherit}
+.hidden{display:none!important}
+
+#app{display:flex;flex-direction:column;height:100dvh;max-width:520px;margin:0 auto}
+header{padding:10px 14px 6px;display:flex;align-items:center;gap:10px}
+header h1{font-size:18px;margin:0;font-weight:800}
+.code{font-size:12px;color:var(--soft);background:var(--card);border:1px solid var(--linea);
+  border-radius:20px;padding:3px 9px;letter-spacing:1px}
+.pareja{margin-left:auto;font-size:12px;text-align:right;line-height:1.2}
+.punto{display:inline-block;width:8px;height:8px;border-radius:50%;background:#ccc;margin-right:4px}
+.punto.on{background:var(--menta)}
+
+.inv{display:flex;gap:6px;padding:4px 14px 8px}
+.inv div{flex:1;background:var(--card);border:1px solid var(--linea);border-radius:14px;
+  text-align:center;padding:5px 2px;font-size:14px}
+.inv b{font-weight:800}
+
+main{flex:1;overflow:auto;padding:0 14px 10px;position:relative}
+nav{display:flex;gap:8px;padding:8px 14px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--linea)}
+nav button{flex:1;background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:10px;font-weight:800}
+nav button.act{background:var(--rosa);color:#fff;border-color:var(--rosa)}
+
+/* --- Habitación --- */
+.cuarto{border-radius:20px;overflow:hidden;border:3px solid #d8b48c;box-shadow:0 6px 0 #d8b48c}
+.pared{height:58px;background:repeating-linear-gradient(90deg,var(--pared) 0 18px,#f9e2dc 18px 36px);
+  display:flex;align-items:center;justify-content:space-around;font-size:30px;border-bottom:6px solid #d8b48c}
+.piso{display:grid;grid-template-columns:repeat(6,1fr)}
+.celda{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:min(9vw,40px);position:relative}
+.celda{background:var(--piso1)} .celda.c2{background:var(--piso2)}
+.libre.marcar{box-shadow:inset 0 0 0 3px rgba(140,199,161,.9)}
+.sel{box-shadow:inset 0 0 0 3px var(--rosa);border-radius:10px}
+.pop{animation:pop .7s ease}
+@keyframes pop{0%{transform:scale(.3)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.etq{position:absolute;bottom:1px;right:3px;font-size:9px;opacity:.6}
+
+.barra{margin:10px 0;background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:10px;
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px}
+.barra span{flex:1 1 140px}
+.btn{background:var(--rosa);color:#fff;border-radius:14px;padding:9px 14px;font-weight:800}
+.btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--linea)}
+.btn.verde{background:var(--menta)}
+.btn:disabled{opacity:.45}
+.grande{width:100%;padding:13px;font-size:16px;margin-top:10px}
+
+/* --- Jardín --- */
+.jardin{background:linear-gradient(#cdeccf,#b5dfb9);border-radius:20px;padding:12px;border:3px solid #9fcfa4;box-shadow:0 6px 0 #9fcfa4;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.spot{aspect-ratio:1;border-radius:18px;background:rgba(255,255,255,.45);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:min(12vw,48px);position:relative;user-select:none}
+.spot.listo{background:rgba(255,255,255,.75);animation:respira 2.2s ease-in-out infinite}
+@keyframes respira{50%{transform:scale(1.05)}}
+.spot small{font-size:11px;color:var(--ink);opacity:.75}
+.prog{width:70%;height:6px;border-radius:6px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:4px}
+.prog i{display:block;height:100%;background:var(--menta)}
+.ayuda{font-size:13px;color:var(--soft);text-align:center;margin:10px 0}
+
+/* --- Tienda (hoja inferior) --- */
+.velo{position:fixed;inset:0;background:rgba(90,70,54,.35);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.hoja{background:var(--bg);width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom));max-height:75dvh;overflow:auto}
+.hoja h2{margin:0 0 10px;font-size:18px}
+.cat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.item{background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:8px 4px;text-align:center}
+.item .e{font-size:32px}
+.item .n{font-size:13px;font-weight:800}
+.item .c{font-size:11px;color:var(--soft)}
+.item:disabled{opacity:.4}
+
+/* --- Entrada --- */
+#entrada{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;z-index:30}
+.caja{width:100%;max-width:380px;text-align:center}
+.caja .logo{font-size:64px}
+.caja h1{margin:4px 0 2px;font-weight:800}
+.caja p{color:var(--soft);margin:0 0 16px;font-size:14px}
+.caja input{width:100%;padding:12px;border-radius:14px;border:1px solid var(--linea);background:var(--card);margin-top:8px;text-align:center;font-size:16px}
+.sep{margin:16px 0 4px;color:var(--soft);font-size:13px}
+.aviso{font-size:12px;background:#fff1c9;border:1px solid #f0d98a;border-radius:12px;padding:8px;margin-top:14px;color:#7a6020}
+
+/* --- Avisos flotantes --- */
+#toasts{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:40;pointer-events:none}
+.toast{background:var(--ink);color:#fff;border-radius:16px;padding:8px 14px;font-size:14px;max-width:90%;animation:entra .3s ease}
+@keyframes entra{from{opacity:0;transform:translateY(-10px)}}
+.flota{position:fixed;font-weight:800;font-size:20px;pointer-events:none;z-index:35;animation:sube 1s ease forwards}
+@keyframes sube{to{transform:translateY(-50px);opacity:0}}
+</style>
+</head>
+<body>
+
+<!-- ===================== PANTALLA DE ENTRADA ===================== -->
+<div id="entrada">
+  <div class="caja">
+    <div class="logo">🏡</div>
+    <h1>Nuestra Casa</h1>
+    <p>Una casita para construir juntos 💕</p>
+    <input id="inNombre" maxlength="16" placeholder="Tu nombre">
+    <button class="btn grande" id="btnCrear">✨ Crear casa nueva</button>
+    <div class="sep">— o únete a la casa de tu pareja —</div>
+    <input id="inCodigo" maxlength="6" placeholder="Código (ej. K7PQ2M)" style="text-transform:uppercase">
+    <button class="btn verde grande" id="btnUnirme">🔑 Unirme</button>
+    <div class="aviso hidden" id="avisoLocal">Modo de prueba local: todavía no pegaste tu configuración de Firebase. Puedes probar abriendo este archivo en <b>dos pestañas</b> del mismo navegador.</div>
+  </div>
+</div>
+
+<!-- ===================== JUEGO ===================== -->
+<div id="app" class="hidden">
+  <header>
+    <h1>🏡 Nuestra Casa</h1>
+    <span class="code" id="lblCodigo" title="Toca para compartir">------</span>
+    <div class="pareja" id="lblPareja"></div>
+  </header>
+  <div class="inv" id="inv"></div>
+  <main id="vista"></main>
+  <nav>
+    <button data-ir="casa" class="act">🛋️ Casa</button>
+    <button data-ir="jardin">🌳 Jardín</button>
+    <button data-ir="salir" style="flex:0 0 52px">🚪</button>
+  </nav>
+</div>
+
+<div id="toasts"></div>
+
+<script type="module">
+/* =========================================================
+   1) CONFIGURACIÓN DE FIREBASE
+   Reemplaza este bloque por el que te da Firebase
+   (Configuración del proyecto → Tus apps → SDK config).
+   Si lo dejas así, el juego funciona en "modo de prueba local".
+   ========================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCJ8KfgG9La7NxYodQVL3bwGSEw_6ol4E4",
+  authDomain: "nuestra-casa-3ca45.firebaseapp.com",
+  databaseURL: "https://nuestra-casa-3ca45-default-rtdb.firebaseio.com",
+  projectId: "nuestra-casa-3ca45",
+  storageBucket: "nuestra-casa-3ca45.firebasestorage.app",
+  messagingSenderId: "1021805070594",
+  appId: "1:1021805070594:web:884c7062e9a2c074189a1b"
+};
+
+/* =========================================================
+   2) DATOS DEL JUEGO (fácil de ampliar)
+   ========================================================= */
+const RES = {
+  madera:       { e: "🪵", n: "Madera" },
+  flores:       { e: "🌸", n: "Flores" },
+  ingredientes: { e: "🍓", n: "Ingredientes" },
+  monedas:      { e: "🪙", n: "Monedas" },
+};
+
+// Cosas del jardín: qué dan y cuánto tardan en volver a crecer (segundos)
+const FUENTES = {
+  arbol:  { e: "🌳", espera: "🌱", res: "madera",       min: 1, max: 3, crece: 45, n: "Árbol" },
+  flor:   { e: "🌷", espera: "🌱", res: "flores",       min: 1, max: 2, crece: 30, n: "Flores" },
+  fresa:  { e: "🍓", espera: "🌿", res: "ingredientes", min: 1, max: 2, crece: 40, n: "Fresas" },
+  brillo: { e: "✨", espera: "🍂", res: "monedas",      min: 2, max: 5, crece: 60, n: "Algo brilla" },
+};
+const JARDIN_INICIAL = ["arbol","flor","fresa","arbol","brillo","flor","arbol","fresa","flor","brillo","arbol","flor"];
+
+// Muebles: nombre, dibujo y costo
+const MUEBLES = {
+  silla:   { e: "🪑", n: "Silla",      costo: { madera: 3 } },
+  estante: { e: "📚", n: "Estantería", costo: { madera: 5, monedas: 2 } },
+  cama:    { e: "🛏️", n: "Cama",       costo: { madera: 8, monedas: 5 } },
+  sofa:    { e: "🛋️", n: "Sofá",       costo: { madera: 6, monedas: 8 } },
+  maceta:  { e: "🪴", n: "Maceta",     costo: { flores: 3, madera: 1 } },
+  florero: { e: "💐", n: "Florero",    costo: { flores: 5 } },
+  vela:    { e: "🕯️", n: "Vela",       costo: { flores: 1, monedas: 2 } },
+  cuadro:  { e: "🖼️", n: "Cuadro",     costo: { madera: 2, monedas: 3 } },
+  reloj:   { e: "🕰️", n: "Reloj",      costo: { madera: 2, monedas: 6 } },
+  osito:   { e: "🧸", n: "Osito",      costo: { flores: 2, monedas: 3 } },
+  frutero: { e: "🧺", n: "Frutero",    costo: { ingredientes: 4, madera: 1 } },
+  tele:    { e: "📺", n: "Tele",       costo: { monedas: 12 } },
+};
+const COLS = 6, FILAS = 7;
+
+function casaNueva() {
+  return {
+    meta: { creada: Date.now(), version: 1 },
+    inv: { madera: 6, flores: 4, ingredientes: 2, monedas: 10 },
+    jardin: JARDIN_INICIAL.map(t => ({ tipo: t, listoEn: 0 })),
+    cuarto: { "2_3": { tipo: "silla", id: "inicio", por: "casa", en: 0 } },
+  };
+}
+
+/* =========================================================
+   3) CONEXIÓN (Firebase o modo local)
+   Las dos opciones ofrecen las mismas funciones:
+   escuchar, tx (transacción segura), poner, presencia, ahora
+   ========================================================= */
+const usarFirebase = !FIREBASE_CONFIG.apiKey.startsWith("PEGA");
+const copia = v => (v === undefined || v === null) ? null : JSON.parse(JSON.stringify(v));
+
+async function conexionFirebase(codigo) {
+  const V = "10.12.2";
+  const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`);
+  const F = await import(`https://www.gstatic.com/firebasejs/${V}/firebase-database.js`);
+  const app = initializeApp(FIREBASE_CONFIG);
+  const db = F.getDatabase(app);
+  const base = "houses/" + codigo;
+  const r = p => F.ref(db, p ? base + "/" + p : base);
+  let desfase = 0;
+  F.onValue(F.ref(db, ".info/serverTimeOffset"), s => desfase = s.val() || 0);
+  return {
+    escuchar(cb) { F.onValue(r(""), s => cb(s.val()), e => error(e)); },
+    async tx(p, fn) { const res = await F.runTransaction(r(p), fn); return res.committed; },
+    poner(p, v) { return F.set(r(p), v); },
+    presencia(id, datos) {
+      const pr = r("players/" + id);
+      F.onValue(F.ref(db, ".info/connected"), s => {
+        if (!s.val()) return;
+        F.onDisconnect(pr).update({ online: false, visto: F.serverTimestamp() });
+        F.update(pr, { ...datos, online: true });
+      });
+    },
+    ahora: () => Date.now() + desfase,
+  };
+}
+
+function conexionLocal(codigo) {
+  const KEY = "nuestracasa_local_" + codigo;
+  let estado = null;
+  try { estado = JSON.parse(localStorage.getItem(KEY)); } catch (e) {}
+  const canal = ("BroadcastChannel" in window) ? new BroadcastChannel(KEY) : null;
+  const oyentes = [];
+  const avisar = () => oyentes.forEach(cb => cb(copia(estado)));
+  const guardar = () => {
+    try { localStorage.setItem(KEY, JSON.stringify(estado)); } catch (e) {}
+    canal && canal.postMessage(estado);
+    avisar();
+  };
+  if (canal) canal.onmessage = e => { estado = e.data; avisar(); };
+  const leer = p => !p ? estado : p.split("/").reduce((o, k) => o == null ? null : (o[k] ?? null), estado);
+  const escribir = (p, v) => {
+    if (!p) { estado = v; return; }
+    const ks = p.split("/"); if (!estado) estado = {};
+    let o = estado;
+    for (let i = 0; i < ks.length - 1; i++) {
+      if (typeof o[ks[i]] !== "object" || o[ks[i]] === null) o[ks[i]] = {};
+      o = o[ks[i]];
+    }
+    if (v === null) delete o[ks.at(-1)]; else o[ks.at(-1)] = v;
+  };
+  return {
+    escuchar(cb) { oyentes.push(cb); setTimeout(() => cb(copia(estado)), 0); },
+    async tx(p, fn) { const nv = fn(copia(leer(p))); if (nv === undefined) return false; escribir(p, copia(nv)); guardar(); return true; },
+    async poner(p, v) { escribir(p, copia(v)); guardar(); },
+    presencia(id, datos) {
+      escribir("players/" + id, { ...datos, online: true }); guardar();
+      addEventListener("pagehide", () => { escribir("players/" + id + "/online", false); guardar(); });
+    },
+    ahora: () => Date.now(),
+  };
+}
+
+/* =========================================================
+   4) ESTADO DEL JUEGO
+   ========================================================= */
+let api = null;      // conexión activa
+let S = null;        // la casa tal como está ahora (compartida)
+let vista = "casa";
+let modo = null;     // null | {tipo:'poner',mueble} | {tipo:'sel',clave} | {tipo:'mover',clave}
+let verTienda = false;
+const yo = { id: idPropio(), nombre: "" };
+const ultimoVisto = {};      // para no repetir avisos de la pareja
+let clavesPrevias = null;    // para animar muebles nuevos de la pareja
+const animar = {};           // clave -> hasta cuándo animar
+
+function idPropio() {
+  let id = null;
+  try { id = localStorage.getItem("nuestracasa_id"); } catch (e) {}
+  if (!id) {
+    id = "p" + Math.random().toString(36).slice(2, 10);
+    try { localStorage.setItem("nuestracasa_id", id); } catch (e) {}
+  }
+  // En modo de prueba local, cada pestaña cuenta como un jugador distinto
+  if (!usarFirebase) {
+    let t = null;
+    try { t = sessionStorage.getItem("nuestracasa_tab"); if (!t) { t = Math.random().toString(36).slice(2, 6); sessionStorage.setItem("nuestracasa_tab", t); } } catch (e) { t = Math.random().toString(36).slice(2, 6); }
+    id += "_" + t;
+  }
+  return id;
+}
+function recordar(k, v) { try { localStorage.setItem("nuestracasa_" + k, v); } catch (e) {} }
+function recuerdo(k) { try { return localStorage.getItem("nuestracasa_" + k) || ""; } catch (e) { return ""; } }
+
+/* =========================================================
+   5) ENTRAR A UNA CASA
+   ========================================================= */
+const $ = id => document.getElementById(id);
+$("inNombre").value = recuerdo("nombre");
+$("inCodigo").value = recuerdo("codigo");
+if (!usarFirebase) $("avisoLocal").classList.remove("hidden");
+
+function codigoNuevo() {
+  const L = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin letras confusas (O/0, I/1)
+  return Array.from({ length: 6 }, () => L[Math.floor(Math.random() * L.length)]).join("");
+}
+
+$("btnCrear").onclick = () => entrar(codigoNuevo(), true);
+$("btnUnirme").onclick = () => {
+  const c = $("inCodigo").value.trim().toUpperCase();
+  if (!/^[A-Z0-9]{6}$/.test(c)) return toast("El código tiene 6 letras/números");
+  entrar(c, false);
+};
+
+async function entrar(codigo, esNueva) {
+  yo.nombre = $("inNombre").value.trim() || "Alguien";
+  recordar("nombre", yo.nombre); recordar("codigo", codigo);
+  try {
+    api = usarFirebase ? await conexionFirebase(codigo) : conexionLocal(codigo);
+    // Crea la casa solo si todavía no existe
+    const creada = await api.tx("", cur => (cur && cur.meta) ? undefined : { ...(cur || {}), ...casaNueva() });
+    if (creada && !esNueva) toast("Esa casa no existía: creamos una nueva con ese código 🏠");
+    api.presencia(yo.id, { nombre: yo.nombre, vista, unido: api.ahora() });
+    api.escuchar(nuevo => { S = nuevo || {}; alCambiar(); });
+  } catch (e) { return error(e); }
+  $("lblCodigo").textContent = codigo;
+  $("entrada").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  if (esNueva) toast("¡Casa creada! Comparte el código " + codigo + " con tu pareja 💌");
+}
+
+function error(e) {
+  console.error(e);
+  const m = String(e && e.message || e);
+  if (/permission/i.test(m)) toast("Firebase no dio permiso: revisa las Reglas (paso 4 de la guía)");
+  else if (/databaseURL|Can't determine Firebase Database URL/i.test(m)) toast("Falta databaseURL en la configuración de Firebase");
+  else toast("Error: " + m);
+}
+
+/* =========================================================
+   6) CUANDO LA CASA CAMBIA (lo tuyo o lo de tu pareja)
+   ========================================================= */
+function alCambiar() {
+  // Avisos de lo que hizo la pareja
+  const jugadores = S.players || {};
+  for (const [id, p] of Object.entries(jugadores)) {
+    if (id === yo.id || !p.ultimo) continue;
+    if (ultimoVisto[id] === undefined) { ultimoVisto[id] = p.ultimo.ts; continue; } // no repetir lo viejo
+    if (p.ultimo.ts > ultimoVisto[id]) {
+      ultimoVisto[id] = p.ultimo.ts;
+      toast(`💞 ${p.nombre} ${p.ultimo.texto}`);
+    }
+  }
+  // Muebles nuevos puestos por la pareja → animación
+  const cuarto = S.cuarto || {};
+  if (clavesPrevias) {
+    for (const [k, m] of Object.entries(cuarto)) {
+      if (!clavesPrevias[k] || clavesPrevias[k] !== m.id) if (m.por !== yo.id) animar[k] = Date.now() + 900;
+    }
+  }
+  clavesPrevias = Object.fromEntries(Object.entries(cuarto).map(([k, m]) => [k, m.id]));
+  dibujar();
+}
+
+function pareja() {
+  return Object.entries(S?.players || {})
+    .filter(([id]) => id !== yo.id)
+    .map(([id, p]) => ({ id, ...p }))
+    .sort((a, b) => (b.online - a.online) || ((b.unido || 0) - (a.unido || 0)))[0];
+}
+
+/* =========================================================
+   7) ACCIONES DEL JUEGO
+   ========================================================= */
+const azar = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const contar = (accion) => api.poner("players/" + yo.id + "/ultimo", { texto: accion, ts: api.ahora() });
+
+function sumar(delta) {
+  return api.tx("inv", inv => {
+    inv = { ...(inv || {}) };
+    for (const k in delta) inv[k] = (inv[k] || 0) + delta[k];
+    return inv;
+  });
+}
+function gastar(costo) {
+  return api.tx("inv", inv => {
+    if (!inv) return;                  // sin datos aún → cancelar
+    inv = { ...inv };
+    for (const k in costo) { if ((inv[k] || 0) < costo[k]) return; inv[k] -= costo[k]; }
+    return inv;
+  });
+}
+const alcanza = costo => Object.entries(costo).every(([k, v]) => (S?.inv?.[k] || 0) >= v);
+const textoCosto = costo => Object.entries(costo).map(([k, v]) => v + RES[k].e).join(" ");
+
+async function recolectar(i, el) {
+  let res, cant;
+  const ok = await api.tx("jardin/" + i, s => {
+    if (!s || s.listoEn > api.ahora()) return;            // aún no está listo
+    const F = FUENTES[s.tipo]; res = F.res; cant = azar(F.min, F.max);
+    return { ...s, listoEn: api.ahora() + F.crece * 1000 };
+  });
+  if (!ok) return toast("¡Alguien lo recogió primero! 😄");
+  await sumar({ [res]: cant });
+  flotar(el, `+${cant} ${RES[res].e}`);
+  contar(`recogió ${cant} ${RES[res].e} en el jardín`);
+}
+
+async function poner(x, y, tipo) {
+  const M = MUEBLES[tipo];
+  if (!await gastar(M.costo)) return toast("Faltan recursos 🌱 ¡vamos al jardín!");
+  const clave = x + "_" + y;
+  const ok = await api.tx("cuarto/" + clave, cur => cur ? undefined : { tipo, id: Math.random().toString(36).slice(2, 9), por: yo.id, en: api.ahora() });
+  if (!ok) { await sumar(M.costo); return toast("Ese lugar ya se ocupó"); }
+  contar(`colocó ${M.e} ${M.n}`);
+}
+
+async function mover(desde, x, y) {
+  const m = S.cuarto?.[desde]; if (!m) return;
+  const hasta = x + "_" + y;
+  // 1) sacar del lugar viejo (solo si sigue siendo el mismo mueble)
+  const saque = await api.tx("cuarto/" + desde, cur => (cur && cur.id === m.id) ? null : undefined);
+  if (!saque) return toast("Tu pareja ya lo movió 🙂");
+  // 2) ponerlo en el nuevo lugar
+  const ok = await api.tx("cuarto/" + hasta, cur => cur ? undefined : { ...m, por: yo.id, en: api.ahora() });
+  if (!ok) { // devolverlo si el lugar se ocupó
+    const vuelve = await api.tx("cuarto/" + desde, cur => cur ? undefined : m);
+    if (!vuelve) await sumar(MUEBLES[m.tipo].costo);
+    return toast("Ese lugar se ocupó");
+  }
+  contar(`movió ${MUEBLES[m.tipo].e} ${MUEBLES[m.tipo].n}`);
+}
+
+async function guardar(clave) {
+  const m = S.cuarto?.[clave]; if (!m) return;
+  const ok = await api.tx("cuarto/" + clave, cur => (cur && cur.id === m.id) ? null : undefined);
+  if (!ok) return;
+  await sumar(MUEBLES[m.tipo].costo);   // se devuelven los recursos
+  contar(`guardó ${MUEBLES[m.tipo].e} ${MUEBLES[m.tipo].n}`);
+}
+
+/* =========================================================
+   8) DIBUJAR LA PANTALLA
+   ========================================================= */
+function dibujar() {
+  if (!S) return;
+  // Inventario compartido
+  $("inv").innerHTML = Object.entries(RES).map(([k, r]) =>
+    `<div title="${r.n}">${r.e} <b>${S.inv?.[k] || 0}</b></div>`).join("");
+  // Pareja
+  const p = pareja();
+  $("lblPareja").innerHTML = p
+    ? `<span class="punto ${p.online ? "on" : ""}"></span>${esc(p.nombre)}<br><small>${p.online ? (p.vista === "jardin" ? "en el jardín 🌳" : "en la casa 🛋️") : "desconectado"}</small>`
+    : `<small>Esperando a tu pareja…<br>comparte el código 💌</small>`;
+  if (vista === "casa") dibujarCasa(); else dibujarJardin();
+}
+
+function dibujarCasa() {
+  const cuarto = S.cuarto || {};
+  let celdas = "";
+  for (let y = 0; y < FILAS; y++) for (let x = 0; x < COLS; x++) {
+    const k = x + "_" + y, m = cuarto[k];
+    const clases = ["celda", (x + y) % 2 ? "c2" : "", m ? "" : "libre",
+      (!m && modo && modo.tipo !== "sel") ? "marcar" : "",
+      (modo?.clave === k) ? "sel" : "",
+      (animar[k] > Date.now()) ? "pop" : ""].join(" ");
+    const etiqueta = m && m.por !== yo.id && m.por !== "casa" ? `<span class="etq">💞</span>` : "";
+    celdas += `<div class="${clases}" data-celda="${x},${y}">${m ? MUEBLES[m.tipo]?.e || "❓" : ""}${etiqueta}</div>`;
+  }
+  let barra;
+  if (!modo) barra = `<span>Toca un mueble para moverlo o guardarlo.</span><button class="btn" data-acc="tienda">🛠️ Construir</button>`;
+  else if (modo.tipo === "poner") barra = `<span>Toca un lugar libre para poner ${MUEBLES[modo.mueble].e} ${MUEBLES[modo.mueble].n}</span><button class="btn sec" data-acc="cancelar">Listo</button>`;
+  else if (modo.tipo === "sel") {
+    const m = cuarto[modo.clave];
+    barra = m ? `<span>${MUEBLES[m.tipo].e} ${MUEBLES[m.tipo].n}</span>
+      <button class="btn verde" data-acc="mover">↔️ Mover</button>
+      <button class="btn sec" data-acc="guardar">📦 Guardar</button>
+      <button class="btn sec" data-acc="cancelar">✕</button>` : (modo = null, `<span>Ese mueble ya no está.</span>`);
+  }
+  else if (modo.tipo === "mover") barra = `<span>Toca dónde quieres moverlo</span><button class="btn sec" data-acc="cancelar">Cancelar</button>`;
+
+  $("vista").innerHTML = `
+    <div class="cuarto">
+      <div class="pared">🪟<span style="font-size:22px">🌼</span>🪟</div>
+      <div class="piso">${celdas}</div>
+    </div>
+    <div class="barra">${barra}</div>
+    ${verTienda ? tienda() : ""}`;
+}
+
+function tienda() {
+  return `<div class="velo" data-acc="cerrar"><div class="hoja" data-stop>
+    <h2>🛠️ ¿Qué construimos?</h2>
+    <div class="cat">${Object.entries(MUEBLES).map(([k, m]) =>
+      `<button class="item" data-mueble="${k}" ${alcanza(m.costo) ? "" : "disabled"}>
+         <div class="e">${m.e}</div><div class="n">${m.n}</div><div class="c">${textoCosto(m.costo)}</div></button>`).join("")}
+    </div>
+    <button class="btn sec grande" data-acc="cerrar">Cerrar</button>
+  </div></div>`;
+}
+
+function dibujarJardin() {
+  const ahora = api.ahora();
+  const jardin = Object.entries(S.jardin || []);
+  const html = jardin.map(([i, s]) => {
+    const F = FUENTES[s.tipo]; const listo = s.listoEn <= ahora;
+    if (listo) return { cls: "spot listo", inner: `${F.e}<small>${F.n}</small>` };
+    const falta = Math.ceil((s.listoEn - ahora) / 1000), pct = 100 - (falta / F.crece) * 100;
+    return { cls: "spot", inner: `${F.espera}<small>${falta}s</small><div class="prog"><i style="width:${Math.max(0, pct)}%"></i></div>` };
+  });
+  let caja = $("vista").querySelector(".jardin");
+  if (!caja || caja.children.length !== html.length) {
+    $("vista").innerHTML = `
+      <p class="ayuda">Toca lo que esté listo para recolectar. Todo lo que juntan va a la despensa compartida 🧺</p>
+      <div class="jardin">${jardin.map(([i]) => `<div data-spot="${i}"></div>`).join("")}</div>`;
+    caja = $("vista").querySelector(".jardin");
+  }
+  // Solo cambiamos lo que de verdad cambió (así los toques no se pierden)
+  html.forEach((h, n) => {
+    const el = caja.children[n];
+    if (el.className !== h.cls) el.className = h.cls;
+    if (el.innerHTML !== h.inner) el.innerHTML = h.inner;
+  });
+}
+
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function toast(t) {
+  const d = document.createElement("div"); d.className = "toast"; d.textContent = t;
+  $("toasts").appendChild(d);
+  while ($("toasts").children.length > 3) $("toasts").firstChild.remove();
+  setTimeout(() => d.remove(), 3200);
+}
+function flotar(el, t) {
+  const r = el.getBoundingClientRect(), d = document.createElement("div");
+  d.className = "flota"; d.textContent = t;
+  d.style.left = (r.left + r.width / 2 - 30) + "px"; d.style.top = (r.top + 10) + "px";
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1000);
+}
+
+/* =========================================================
+   9) TOQUES DEL JUGADOR
+   ========================================================= */
+document.querySelector("nav").onclick = e => {
+  const b = e.target.closest("[data-ir]"); if (!b) return;
+  if (b.dataset.ir === "salir") { if (confirm("¿Salir de esta casa? (podrás volver con el código)")) location.reload(); return; }
+  vista = b.dataset.ir; modo = null; verTienda = false;
+  document.querySelectorAll("nav [data-ir]").forEach(x => x.classList.toggle("act", x === b));
+  api.poner("players/" + yo.id + "/vista", vista);
+  dibujar();
+};
+
+$("lblCodigo").onclick = async () => {
+  const c = $("lblCodigo").textContent, txt = `¡Ven a nuestra casa! 🏡 Código: ${c}`;
+  try { if (navigator.share) await navigator.share({ text: txt }); else { await navigator.clipboard.writeText(c); toast("Código copiado 📋"); } } catch (e) {}
+};
+
+$("vista").onclick = async e => {
+  if (!S) return;
+  const t = e.target;
+  const mb = t.closest("[data-mueble]");
+  if (mb) { modo = { tipo: "poner", mueble: mb.dataset.mueble }; verTienda = false; return dibujar(); }
+
+  const acc = t.closest("[data-acc]");
+  if (acc && !(acc.classList.contains("velo") && t.closest("[data-stop]"))) {
+    const a = acc.dataset.acc;
+    if (a === "tienda") verTienda = true;
+    if (a === "cerrar") verTienda = false;
+    if (a === "cancelar") modo = null;
+    if (a === "mover") modo = { tipo: "mover", clave: modo.clave };
+    if (a === "guardar") { const k = modo.clave; modo = null; await guardar(k); }
+    return dibujar();
+  }
+  const spot = t.closest("[data-spot]");
+  if (spot) return recolectar(spot.dataset.spot, spot);
+
+  const celda = t.closest("[data-celda]");
+  if (celda) {
+    const [x, y] = celda.dataset.celda.split(",").map(Number), k = x + "_" + y;
+    const ocupado = !!S.cuarto?.[k];
+    if (modo?.tipo === "poner" && !ocupado) {
+      await poner(x, y, modo.mueble);
+      if (!alcanza(MUEBLES[modo.mueble].costo)) modo = null;  // sin recursos para otro igual
+    } else if (modo?.tipo === "mover" && !ocupado) {
+      const desde = modo.clave; modo = null; await mover(desde, x, y);
+    } else if (ocupado) {
+      modo = { tipo: "sel", clave: k };
+    }
+    dibujar();
+  }
+};
+
+// El jardín se va actualizando solo (las plantas crecen en segundo plano)
+setInterval(() => { if (S && vista === "jardin") dibujarJardin(); }, 1000);
+</script>
+</body>
+</html>
