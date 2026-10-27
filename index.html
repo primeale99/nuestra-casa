@@ -15,6 +15,7 @@
   --bg:#fdf3e7; --card:#fffaf3; --ink:#5a4636; --soft:#a68b74;
   --rosa:#e88d8d; --menta:#8cc7a1; --linea:#ead8c4;
   --piso1:#ecd0ad; --piso2:#e4c39c; --pared:#f6d6d0;
+  --tierra1:#9a6a48; --tierra2:#8a5c3d; --mojada1:#6e4a33; --mojada2:#5f3f2b;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);
@@ -38,17 +39,18 @@ header h1{font-size:18px;margin:0;font-weight:800}
 .inv b{font-weight:800}
 
 main{flex:1;overflow:auto;padding:0 14px 10px;position:relative}
-nav{display:flex;gap:8px;padding:8px 14px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--linea)}
-nav button{flex:1;background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:10px;font-weight:800}
+nav{display:flex;gap:6px;padding:8px 14px calc(10px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--linea)}
+nav button{flex:1;background:var(--card);border:1px solid var(--linea);border-radius:16px;padding:10px 4px;font-weight:800;font-size:14px}
 nav button.act{background:var(--rosa);color:#fff;border-color:var(--rosa)}
+h3{font-size:15px;margin:12px 2px 8px;font-weight:800}
 
 /* --- Habitación --- */
 .cuarto{border-radius:20px;overflow:hidden;border:3px solid #d8b48c;box-shadow:0 6px 0 #d8b48c}
 .pared{height:58px;background:repeating-linear-gradient(90deg,var(--pared) 0 18px,#f9e2dc 18px 36px);
   display:flex;align-items:center;justify-content:space-around;font-size:30px;border-bottom:6px solid #d8b48c}
 .piso{display:grid;grid-template-columns:repeat(6,1fr)}
-.celda{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:min(9vw,40px);position:relative}
-.celda{background:var(--piso1)} .celda.c2{background:var(--piso2)}
+.celda{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:min(9vw,40px);position:relative;background:var(--piso1)}
+.celda.c2{background:var(--piso2)}
 .libre.marcar{box-shadow:inset 0 0 0 3px rgba(140,199,161,.9)}
 .sel{box-shadow:inset 0 0 0 3px var(--rosa);border-radius:10px}
 .pop{animation:pop .7s ease}
@@ -61,22 +63,47 @@ nav button.act{background:var(--rosa);color:#fff;border-color:var(--rosa)}
 .btn{background:var(--rosa);color:#fff;border-radius:14px;padding:9px 14px;font-weight:800}
 .btn.sec{background:var(--card);color:var(--ink);border:1px solid var(--linea)}
 .btn.verde{background:var(--menta)}
+.btn.chico{padding:6px 10px;font-size:13px;border-radius:12px}
 .btn:disabled{opacity:.45}
 .grande{width:100%;padding:13px;font-size:16px;margin-top:10px}
 
-/* --- Jardín --- */
-.jardin{background:linear-gradient(#cdeccf,#b5dfb9);border-radius:20px;padding:12px;border:3px solid #9fcfa4;box-shadow:0 6px 0 #9fcfa4;
-  display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.spot{aspect-ratio:1;border-radius:18px;background:rgba(255,255,255,.45);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;font-size:min(12vw,48px);position:relative;user-select:none}
-.spot.listo{background:rgba(255,255,255,.75);animation:respira 2.2s ease-in-out infinite}
+/* --- Bosque --- */
+.bosque{background:linear-gradient(#cdeccf,#b5dfb9);border-radius:20px;padding:10px;border:3px solid #9fcfa4;box-shadow:0 5px 0 #9fcfa4;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.spot{aspect-ratio:1.25;border-radius:16px;background:rgba(255,255,255,.45);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:min(10vw,40px);position:relative;user-select:none}
+.spot.listo{background:rgba(255,255,255,.8);animation:respira 2.2s ease-in-out infinite}
 @keyframes respira{50%{transform:scale(1.05)}}
-.spot small{font-size:11px;color:var(--ink);opacity:.75}
-.prog{width:70%;height:6px;border-radius:6px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:4px}
+.spot small,.parcela small{font-size:11px;opacity:.85}
+.prog{width:70%;height:6px;border-radius:6px;background:rgba(0,0,0,.12);overflow:hidden;margin-top:3px}
 .prog i{display:block;height:100%;background:var(--menta)}
+
+/* --- Huerto (parcelas de tierra arada) --- */
+.huerto{background:#7fbf6a;border-radius:20px;padding:10px;border:3px solid #5f9c4d;box-shadow:0 5px 0 #5f9c4d;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.parcela{aspect-ratio:1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:min(9vw,36px);position:relative;user-select:none;color:#fff;
+  background:repeating-linear-gradient(0deg,var(--tierra1) 0 7px,var(--tierra2) 7px 14px);
+  box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
+.parcela.mojada{background:repeating-linear-gradient(0deg,var(--mojada1) 0 7px,var(--mojada2) 7px 14px)}
+.parcela.vacia{color:rgba(255,255,255,.55);font-size:22px}
+.parcela.marcar.vacia{box-shadow:inset 0 0 0 3px #fff6a8}
+.parcela.madura{animation:respira 1.8s ease-in-out infinite;box-shadow:inset 0 0 0 3px #ffe27a}
+.parcela .gota{position:absolute;top:2px;right:4px;font-size:12px}
+.parcela .prog{background:rgba(255,255,255,.25)}
+.parcela .prog i{background:#ffe27a}
+.semilla{font-size:14px;letter-spacing:3px;color:#e8cfa0}
 .ayuda{font-size:13px;color:var(--soft);text-align:center;margin:10px 0}
 
-/* --- Tienda (hoja inferior) --- */
+/* --- Mercado --- */
+.lista{display:flex;flex-direction:column;gap:6px}
+.fila{background:var(--card);border:1px solid var(--linea);border-radius:14px;padding:8px 10px;display:flex;align-items:center;gap:8px}
+.fila .e{font-size:28px;width:36px;text-align:center}
+.fila .t{flex:1;font-size:14px;line-height:1.25}
+.fila .t small{color:var(--soft)}
+.vacio{color:var(--soft);font-size:14px;text-align:center;padding:14px;background:var(--card);border:1px dashed var(--linea);border-radius:14px}
+
+/* --- Hoja inferior (tienda / semillas) --- */
 .velo{position:fixed;inset:0;background:rgba(90,70,54,.35);display:flex;align-items:flex-end;justify-content:center;z-index:20}
 .hoja{background:var(--bg);width:100%;max-width:520px;border-radius:24px 24px 0 0;padding:16px 14px calc(16px + env(safe-area-inset-bottom));max-height:75dvh;overflow:auto}
 .hoja h2{margin:0 0 10px;font-size:18px}
@@ -100,8 +127,8 @@ nav button.act{background:var(--rosa);color:#fff;border-color:var(--rosa)}
 /* --- Avisos flotantes --- */
 #toasts{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:40;pointer-events:none}
 .toast{background:var(--ink);color:#fff;border-radius:16px;padding:8px 14px;font-size:14px;max-width:90%;animation:entra .3s ease}
-@keyframes entra{from{opacity:0;transform:translateY(-10px)}}
-.flota{position:fixed;font-weight:800;font-size:20px;pointer-events:none;z-index:35;animation:sube 1s ease forwards}
+@keyframes entra{from{opacity:0;transform:translateY(10px)}}
+.flota{position:fixed;font-weight:800;font-size:20px;pointer-events:none;z-index:35;animation:sube 1s ease forwards;text-shadow:0 1px 0 #fff}
 @keyframes sube{to{transform:translateY(-50px);opacity:0}}
 </style>
 </head>
@@ -133,19 +160,20 @@ nav button.act{background:var(--rosa);color:#fff;border-color:var(--rosa)}
   <main id="vista"></main>
   <nav>
     <button data-ir="casa" class="act">🛋️ Casa</button>
-    <button data-ir="jardin">🌳 Jardín</button>
-    <button data-ir="salir" style="flex:0 0 52px">🚪</button>
+    <button data-ir="granja">🌾 Granja</button>
+    <button data-ir="mercado">🧺 Mercado</button>
+    <button data-ir="salir" style="flex:0 0 46px">🚪</button>
   </nav>
 </div>
 
+<div id="hoja"></div>
 <div id="toasts"></div>
 
 <script type="module">
 /* =========================================================
    1) CONFIGURACIÓN DE FIREBASE
-   Reemplaza este bloque por el que te da Firebase
-   (Configuración del proyecto → Tus apps → SDK config).
-   Si lo dejas así, el juego funciona en "modo de prueba local".
+   Si dejas apiKey empezando con "PEGA", el juego funciona
+   en "modo de prueba local" (dos pestañas del mismo navegador).
    ========================================================= */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyCJ8KfgG9La7NxYodQVL3bwGSEw_6ol4E4",
@@ -161,51 +189,90 @@ const FIREBASE_CONFIG = {
    2) DATOS DEL JUEGO (fácil de ampliar)
    ========================================================= */
 const RES = {
-  madera:       { e: "🪵", n: "Madera" },
-  flores:       { e: "🌸", n: "Flores" },
-  ingredientes: { e: "🍓", n: "Ingredientes" },
-  monedas:      { e: "🪙", n: "Monedas" },
+  madera:  { e: "🪵", n: "Madera" },
+  flores:  { e: "🌸", n: "Flores" },
+  monedas: { e: "🪙", n: "Monedas" },
 };
 
-// Cosas del jardín: qué dan y cuánto tardan en volver a crecer (segundos)
+// Cultivos del huerto (estilo Minecraft).
+// crece = segundos hasta madurar · da = [mín, máx] de cosecha · sem = semillas que devuelve
+// venta = monedas por unidad en el mercado · precio = costo de 1 semilla
+// res = si la cosecha va directo a un recurso (ej. tulipán → flores)
+const CULTIVOS = {
+  trigo:     { e: "🌾", n: "Trigo",          crece: 120, da: [2, 4], sem: [1, 2], venta: 2,  precio: 3 },
+  zanahoria: { e: "🥕", n: "Zanahoria",      crece: 180, da: [1, 3], sem: [1, 2], venta: 3,  precio: 4 },
+  papa:      { e: "🥔", n: "Papa",           crece: 180, da: [1, 3], sem: [1, 2], venta: 3,  precio: 4 },
+  tulipan:   { e: "🌷", n: "Tulipán",        crece: 150, da: [2, 3], sem: [1, 1], venta: 0,  precio: 3, res: "flores" },
+  tomate:    { e: "🍅", n: "Tomate",         crece: 240, da: [2, 3], sem: [1, 2], venta: 4,  precio: 6 },
+  fresa:     { e: "🍓", n: "Fresa",          crece: 240, da: [2, 4], sem: [1, 1], venta: 4,  precio: 6 },
+  maiz:      { e: "🌽", n: "Maíz",           crece: 300, da: [1, 3], sem: [1, 2], venta: 5,  precio: 8 },
+  cana:      { e: "🎋", n: "Caña de azúcar", crece: 360, da: [2, 4], sem: [1, 1], venta: 5,  precio: 8 },
+  cacao:     { e: "🫘", n: "Cacao",          crece: 480, da: [1, 3], sem: [1, 1], venta: 7,  precio: 12 },
+  calabaza:  { e: "🎃", n: "Calabaza",       crece: 600, da: [1, 2], sem: [1, 1], venta: 12, precio: 15 },
+  sandia:    { e: "🍉", n: "Sandía",         crece: 600, da: [1, 2], sem: [1, 1], venta: 12, precio: 15 },
+};
+const PARCELAS = 12;      // tamaño del huerto
+const REGAR = 0.6;        // regar deja el 60% del tiempo que faltaba (−40%)
+
+// Bosque: cosas que vuelven a crecer solas
 const FUENTES = {
-  arbol:  { e: "🌳", espera: "🌱", res: "madera",       min: 1, max: 3, crece: 45, n: "Árbol" },
-  flor:   { e: "🌷", espera: "🌱", res: "flores",       min: 1, max: 2, crece: 30, n: "Flores" },
-  fresa:  { e: "🍓", espera: "🌿", res: "ingredientes", min: 1, max: 2, crece: 40, n: "Fresas" },
-  brillo: { e: "✨", espera: "🍂", res: "monedas",      min: 2, max: 5, crece: 60, n: "Algo brilla" },
+  arbol:   { e: "🌳", espera: "🪵", res: "madera", min: 1, max: 3, crece: 45, n: "Árbol" },
+  arbusto: { e: "🌼", espera: "🌿", res: "flores", min: 1, max: 2, crece: 40, n: "Arbusto" },
 };
-const JARDIN_INICIAL = ["arbol","flor","fresa","arbol","brillo","flor","arbol","fresa","flor","brillo","arbol","flor"];
+const BOSQUE = ["arbol", "arbusto", "arbol", "arbol", "arbol", "arbusto"];
 
-// Muebles: nombre, dibujo y costo
+// Muebles: nombre, dibujo y costo (c_xxx = cosecha de la despensa)
 const MUEBLES = {
-  silla:   { e: "🪑", n: "Silla",      costo: { madera: 3 } },
-  estante: { e: "📚", n: "Estantería", costo: { madera: 5, monedas: 2 } },
-  cama:    { e: "🛏️", n: "Cama",       costo: { madera: 8, monedas: 5 } },
-  sofa:    { e: "🛋️", n: "Sofá",       costo: { madera: 6, monedas: 8 } },
-  maceta:  { e: "🪴", n: "Maceta",     costo: { flores: 3, madera: 1 } },
-  florero: { e: "💐", n: "Florero",    costo: { flores: 5 } },
-  vela:    { e: "🕯️", n: "Vela",       costo: { flores: 1, monedas: 2 } },
-  cuadro:  { e: "🖼️", n: "Cuadro",     costo: { madera: 2, monedas: 3 } },
-  reloj:   { e: "🕰️", n: "Reloj",      costo: { madera: 2, monedas: 6 } },
-  osito:   { e: "🧸", n: "Osito",      costo: { flores: 2, monedas: 3 } },
-  frutero: { e: "🧺", n: "Frutero",    costo: { ingredientes: 4, madera: 1 } },
-  tele:    { e: "📺", n: "Tele",       costo: { monedas: 12 } },
+  silla:    { e: "🪑", n: "Silla",      costo: { madera: 3 } },
+  estante:  { e: "📚", n: "Estantería", costo: { madera: 5, monedas: 2 } },
+  cama:     { e: "🛏️", n: "Cama",       costo: { madera: 8, monedas: 5 } },
+  sofa:     { e: "🛋️", n: "Sofá",       costo: { madera: 6, monedas: 8 } },
+  maceta:   { e: "🪴", n: "Maceta",     costo: { flores: 3, madera: 1 } },
+  florero:  { e: "💐", n: "Florero",    costo: { flores: 5 } },
+  vela:     { e: "🕯️", n: "Vela",       costo: { flores: 1, monedas: 2 } },
+  cuadro:   { e: "🖼️", n: "Cuadro",     costo: { madera: 2, monedas: 3 } },
+  reloj:    { e: "🕰️", n: "Reloj",      costo: { madera: 2, monedas: 6 } },
+  osito:    { e: "🧸", n: "Osito",      costo: { flores: 2, monedas: 3 } },
+  frutero:  { e: "🧺", n: "Frutero",    costo: { madera: 1, c_fresa: 2, c_zanahoria: 2 } },
+  calabazo: { e: "🎃", n: "Calabaza deco", costo: { c_calabaza: 1, flores: 1 } },
+  tele:     { e: "📺", n: "Tele",       costo: { monedas: 12 } },
 };
 const COLS = 6, FILAS = 7;
 
+const huertoVacio = () => Array.from({ length: PARCELAS }, () => ({ estado: "vacia" }));
+const bosqueNuevo = () => BOSQUE.map(t => ({ tipo: t, listoEn: 0 }));
+const SEMILLAS_INICIO = { s_trigo: 4, s_zanahoria: 2, s_papa: 2, s_tulipan: 2 };
+
 function casaNueva() {
   return {
-    meta: { creada: Date.now(), version: 1 },
-    inv: { madera: 6, flores: 4, ingredientes: 2, monedas: 10 },
-    jardin: JARDIN_INICIAL.map(t => ({ tipo: t, listoEn: 0 })),
+    meta: { creada: Date.now(), version: 2 },
+    inv: { madera: 6, flores: 4, monedas: 15, ...SEMILLAS_INICIO },
+    jardin: bosqueNuevo(),
+    huerto: huertoVacio(),
     cuarto: { "2_3": { tipo: "silla", id: "inicio", por: "casa", en: 0 } },
   };
+}
+// Casas creadas con la versión anterior: se actualizan solas
+function actualizarCasa(c) {
+  c.meta.version = 2;
+  c.jardin = bosqueNuevo();
+  c.huerto = huertoVacio();
+  c.inv = c.inv || {};
+  for (const k in SEMILLAS_INICIO) c.inv[k] = (c.inv[k] || 0) + SEMILLAS_INICIO[k];
+  delete c.inv.ingredientes;
+  return c;
+}
+
+// Nombre y dibujo de cualquier cosa del inventario
+function info(k) {
+  if (RES[k]) return RES[k];
+  const [p, c] = k.split("_"), C = CULTIVOS[c];
+  if (!C) return { e: "❓", n: k };
+  return p === "s" ? { e: "🌰", n: "Semilla de " + C.n } : { e: C.e, n: C.n };
 }
 
 /* =========================================================
    3) CONEXIÓN (Firebase o modo local)
-   Las dos opciones ofrecen las mismas funciones:
-   escuchar, tx (transacción segura), poner, presencia, ahora
    ========================================================= */
 const usarFirebase = !FIREBASE_CONFIG.apiKey.startsWith("PEGA");
 const copia = v => (v === undefined || v === null) ? null : JSON.parse(JSON.stringify(v));
@@ -278,12 +345,12 @@ function conexionLocal(codigo) {
 let api = null;      // conexión activa
 let S = null;        // la casa tal como está ahora (compartida)
 let vista = "casa";
-let modo = null;     // null | {tipo:'poner',mueble} | {tipo:'sel',clave} | {tipo:'mover',clave}
-let verTienda = false;
+let modo = null;     // casa: {tipo:'poner'|'sel'|'mover'} · granja: {tipo:'plantar', cultivo}
+let hoja = null;     // null | 'tienda' | {tipo:'semillas', parcela}
 const yo = { id: idPropio(), nombre: "" };
-const ultimoVisto = {};      // para no repetir avisos de la pareja
-let clavesPrevias = null;    // para animar muebles nuevos de la pareja
-const animar = {};           // clave -> hasta cuándo animar
+const ultimoVisto = {};
+let clavesPrevias = null;
+const animar = {};
 
 function idPropio() {
   let id = null;
@@ -292,8 +359,7 @@ function idPropio() {
     id = "p" + Math.random().toString(36).slice(2, 10);
     try { localStorage.setItem("nuestracasa_id", id); } catch (e) {}
   }
-  // En modo de prueba local, cada pestaña cuenta como un jugador distinto
-  if (!usarFirebase) {
+  if (!usarFirebase) { // en modo local, cada pestaña es un jugador distinto
     let t = null;
     try { t = sessionStorage.getItem("nuestracasa_tab"); if (!t) { t = Math.random().toString(36).slice(2, 6); sessionStorage.setItem("nuestracasa_tab", t); } } catch (e) { t = Math.random().toString(36).slice(2, 6); }
     id += "_" + t;
@@ -312,7 +378,7 @@ $("inCodigo").value = recuerdo("codigo");
 if (!usarFirebase) $("avisoLocal").classList.remove("hidden");
 
 function codigoNuevo() {
-  const L = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin letras confusas (O/0, I/1)
+  const L = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   return Array.from({ length: 6 }, () => L[Math.floor(Math.random() * L.length)]).join("");
 }
 
@@ -326,11 +392,16 @@ $("btnUnirme").onclick = () => {
 async function entrar(codigo, esNueva) {
   yo.nombre = $("inNombre").value.trim() || "Alguien";
   recordar("nombre", yo.nombre); recordar("codigo", codigo);
+  let que = "";
   try {
     api = usarFirebase ? await conexionFirebase(codigo) : conexionLocal(codigo);
-    // Crea la casa solo si todavía no existe
-    const creada = await api.tx("", cur => (cur && cur.meta) ? undefined : { ...(cur || {}), ...casaNueva() });
-    if (creada && !esNueva) toast("Esa casa no existía: creamos una nueva con ese código 🏠");
+    await api.tx("", cur => {
+      if (!cur || !cur.meta) { que = "nueva"; return { ...(cur || {}), ...casaNueva() }; }
+      if ((cur.meta.version || 1) < 2) { que = "actualizada"; return actualizarCasa(cur); }
+      que = ""; return;
+    });
+    if (que === "nueva" && !esNueva) toast("Esa casa no existía: creamos una nueva con ese código 🏠");
+    if (que === "actualizada") toast("🌾 ¡Llegó el huerto! Les regalamos semillas para empezar");
     api.presencia(yo.id, { nombre: yo.nombre, vista, unido: api.ahora() });
     api.escuchar(nuevo => { S = nuevo || {}; alCambiar(); });
   } catch (e) { return error(e); }
@@ -343,7 +414,7 @@ async function entrar(codigo, esNueva) {
 function error(e) {
   console.error(e);
   const m = String(e && e.message || e);
-  if (/permission/i.test(m)) toast("Firebase no dio permiso: revisa las Reglas (paso 4 de la guía)");
+  if (/permission/i.test(m)) toast("Firebase no dio permiso: revisa las Reglas");
   else if (/databaseURL|Can't determine Firebase Database URL/i.test(m)) toast("Falta databaseURL en la configuración de Firebase");
   else toast("Error: " + m);
 }
@@ -352,22 +423,15 @@ function error(e) {
    6) CUANDO LA CASA CAMBIA (lo tuyo o lo de tu pareja)
    ========================================================= */
 function alCambiar() {
-  // Avisos de lo que hizo la pareja
-  const jugadores = S.players || {};
-  for (const [id, p] of Object.entries(jugadores)) {
+  for (const [id, p] of Object.entries(S.players || {})) {
     if (id === yo.id || !p.ultimo) continue;
-    if (ultimoVisto[id] === undefined) { ultimoVisto[id] = p.ultimo.ts; continue; } // no repetir lo viejo
-    if (p.ultimo.ts > ultimoVisto[id]) {
-      ultimoVisto[id] = p.ultimo.ts;
-      toast(`💞 ${p.nombre} ${p.ultimo.texto}`);
-    }
+    if (ultimoVisto[id] === undefined) { ultimoVisto[id] = p.ultimo.ts; continue; }
+    if (p.ultimo.ts > ultimoVisto[id]) { ultimoVisto[id] = p.ultimo.ts; toast(`💞 ${p.nombre} ${p.ultimo.texto}`); }
   }
-  // Muebles nuevos puestos por la pareja → animación
   const cuarto = S.cuarto || {};
   if (clavesPrevias) {
-    for (const [k, m] of Object.entries(cuarto)) {
-      if (!clavesPrevias[k] || clavesPrevias[k] !== m.id) if (m.por !== yo.id) animar[k] = Date.now() + 900;
-    }
+    for (const [k, m] of Object.entries(cuarto))
+      if (clavesPrevias[k] !== m.id && m.por !== yo.id) animar[k] = Date.now() + 900;
   }
   clavesPrevias = Object.fromEntries(Object.entries(cuarto).map(([k, m]) => [k, m.id]));
   dibujar();
@@ -379,74 +443,143 @@ function pareja() {
     .map(([id, p]) => ({ id, ...p }))
     .sort((a, b) => (b.online - a.online) || ((b.unido || 0) - (a.unido || 0)))[0];
 }
+const nombreDe = id => S?.players?.[id]?.nombre || "alguien";
 
 /* =========================================================
    7) ACCIONES DEL JUEGO
    ========================================================= */
-const azar = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const azar = ([a, b]) => a + Math.floor(Math.random() * (b - a + 1));
 const contar = (accion) => api.poner("players/" + yo.id + "/ultimo", { texto: accion, ts: api.ahora() });
+const cant = k => S?.inv?.[k] || 0;
 
-function sumar(delta) {
+// Cambia el inventario de forma segura: quita "menos" (si alcanza) y suma "mas"
+function cambiar(menos, mas) {
   return api.tx("inv", inv => {
-    inv = { ...(inv || {}) };
-    for (const k in delta) inv[k] = (inv[k] || 0) + delta[k];
-    return inv;
-  });
-}
-function gastar(costo) {
-  return api.tx("inv", inv => {
-    if (!inv) return;                  // sin datos aún → cancelar
+    if (!inv) return;
     inv = { ...inv };
-    for (const k in costo) { if ((inv[k] || 0) < costo[k]) return; inv[k] -= costo[k]; }
+    for (const k in menos) { if ((inv[k] || 0) < menos[k]) return; inv[k] -= menos[k]; if (!inv[k]) delete inv[k]; }
+    for (const k in mas) if (mas[k]) inv[k] = (inv[k] || 0) + mas[k];
     return inv;
   });
 }
-const alcanza = costo => Object.entries(costo).every(([k, v]) => (S?.inv?.[k] || 0) >= v);
-const textoCosto = costo => Object.entries(costo).map(([k, v]) => v + RES[k].e).join(" ");
+const gastar = c => cambiar(c, {});
+const sumar = d => cambiar({}, d);
+const alcanza = costo => Object.entries(costo).every(([k, v]) => cant(k) >= v);
+const textoCosto = costo => Object.entries(costo).map(([k, v]) => v + info(k).e).join(" ");
 
+// --- Bosque ---
 async function recolectar(i, el) {
-  let res, cant;
+  let res, n;
   const ok = await api.tx("jardin/" + i, s => {
-    if (!s || s.listoEn > api.ahora()) return;            // aún no está listo
-    const F = FUENTES[s.tipo]; res = F.res; cant = azar(F.min, F.max);
+    if (!s || s.listoEn > api.ahora()) return;
+    const F = FUENTES[s.tipo]; if (!F) return;
+    res = F.res; n = azar([F.min, F.max]);
     return { ...s, listoEn: api.ahora() + F.crece * 1000 };
   });
-  if (!ok) return toast("¡Alguien lo recogió primero! 😄");
-  await sumar({ [res]: cant });
-  flotar(el, `+${cant} ${RES[res].e}`);
-  contar(`recogió ${cant} ${RES[res].e} en el jardín`);
+  if (!ok) return;
+  await sumar({ [res]: n });
+  flotar(el, `+${n} ${RES[res].e}`);
+  contar(`juntó ${n} ${RES[res].e} en el bosque`);
 }
 
+// --- Huerto ---
+function estadoParcela(p, ahora) {
+  if (!p || p.estado !== "plantada" || !CULTIVOS[p.cultivo]) return { fase: "vacia" };
+  const C = CULTIVOS[p.cultivo], total = C.crece * 1000, falta = p.listo - ahora;
+  if (falta <= 0) return { fase: "madura", C };
+  const avance = Math.min(1, Math.max(0, 1 - falta / total));
+  return { fase: avance < 0.34 ? "semilla" : avance < 0.67 ? "brote" : "joven", C, falta, avance };
+}
+
+async function plantar(i, cultivo, el) {
+  const C = CULTIVOS[cultivo];
+  if (!await gastar({ ["s_" + cultivo]: 1 })) { toast(`No quedan semillas de ${C.n} 🌰`); return false; }
+  const ahora = api.ahora();
+  const ok = await api.tx("huerto/" + i, p => (p && p.estado === "vacia")
+    ? { estado: "plantada", cultivo, id: Math.random().toString(36).slice(2, 8), plantada: ahora, listo: ahora + C.crece * 1000, regada: false, por: yo.id }
+    : undefined);
+  if (!ok) { await sumar({ ["s_" + cultivo]: 1 }); return false; }
+  flotar(el, "🌰");
+  contar(`plantó ${C.e} ${C.n}`);
+  return true;
+}
+
+async function regar(i, el) {
+  let de = null, C = null;
+  const ok = await api.tx("huerto/" + i, p => {
+    if (!p || p.estado !== "plantada" || p.regada) return;
+    const ahora = api.ahora(); if (p.listo <= ahora) return;
+    de = p.por; C = CULTIVOS[p.cultivo];
+    return { ...p, regada: true, regadaPor: yo.id, listo: ahora + (p.listo - ahora) * REGAR };
+  });
+  if (!ok) return;
+  flotar(el, "💧");
+  contar(de && de !== yo.id ? `regó tu ${C.e} ${C.n} 💧` : `regó ${C.e} ${C.n} 💧`);
+}
+
+async function cosechar(i, el, callado) {
+  let cultivo = null;
+  const ok = await api.tx("huerto/" + i, p => {
+    if (!p || p.estado !== "plantada" || p.listo > api.ahora()) return;
+    cultivo = p.cultivo; return { estado: "vacia" };
+  });
+  if (!ok || !CULTIVOS[cultivo]) return null;
+  const C = CULTIVOS[cultivo], n = azar(C.da), s = azar(C.sem);
+  await sumar({ [C.res || "c_" + cultivo]: n, ["s_" + cultivo]: s });
+  if (el) flotar(el, `+${n} ${C.res ? RES[C.res].e : C.e}`);
+  if (!callado) contar(`cosechó ${n} ${C.e} ${C.n}`);
+  return { C, n };
+}
+
+async function cosecharTodo() {
+  const ahora = api.ahora(); let total = 0;
+  const parcelas = [...document.querySelectorAll("[data-parcela]")];
+  for (const [i, p] of Object.entries(S.huerto || [])) {
+    if (estadoParcela(p, ahora).fase !== "madura") continue;
+    const r = await cosechar(i, parcelas[i], true);
+    if (r) total += r.n;
+  }
+  if (total) contar(`cosechó todo el huerto (${total} 🧺)`);
+}
+
+// --- Mercado ---
+async function vender(cultivo, n) {
+  const C = CULTIVOS[cultivo];
+  if (!await cambiar({ ["c_" + cultivo]: n }, { monedas: n * C.venta })) return;
+  toast(`Vendiste ${n} ${C.e} por ${n * C.venta} 🪙`);
+  contar(`vendió ${n} ${C.e} en el mercado`);
+}
+async function comprar(cultivo) {
+  const C = CULTIVOS[cultivo];
+  if (!await cambiar({ monedas: C.precio }, { ["s_" + cultivo]: 1 })) return toast("Faltan monedas 🪙");
+  contar(`compró semillas de ${C.e} ${C.n}`);
+}
+
+// --- Casa ---
 async function poner(x, y, tipo) {
   const M = MUEBLES[tipo];
-  if (!await gastar(M.costo)) return toast("Faltan recursos 🌱 ¡vamos al jardín!");
-  const clave = x + "_" + y;
-  const ok = await api.tx("cuarto/" + clave, cur => cur ? undefined : { tipo, id: Math.random().toString(36).slice(2, 9), por: yo.id, en: api.ahora() });
+  if (!await gastar(M.costo)) return toast("Faltan recursos 🌱");
+  const ok = await api.tx("cuarto/" + x + "_" + y, cur => cur ? undefined : { tipo, id: Math.random().toString(36).slice(2, 9), por: yo.id, en: api.ahora() });
   if (!ok) { await sumar(M.costo); return toast("Ese lugar ya se ocupó"); }
   contar(`colocó ${M.e} ${M.n}`);
 }
-
 async function mover(desde, x, y) {
   const m = S.cuarto?.[desde]; if (!m) return;
-  const hasta = x + "_" + y;
-  // 1) sacar del lugar viejo (solo si sigue siendo el mismo mueble)
   const saque = await api.tx("cuarto/" + desde, cur => (cur && cur.id === m.id) ? null : undefined);
   if (!saque) return toast("Tu pareja ya lo movió 🙂");
-  // 2) ponerlo en el nuevo lugar
-  const ok = await api.tx("cuarto/" + hasta, cur => cur ? undefined : { ...m, por: yo.id, en: api.ahora() });
-  if (!ok) { // devolverlo si el lugar se ocupó
+  const ok = await api.tx("cuarto/" + x + "_" + y, cur => cur ? undefined : { ...m, por: yo.id, en: api.ahora() });
+  if (!ok) {
     const vuelve = await api.tx("cuarto/" + desde, cur => cur ? undefined : m);
     if (!vuelve) await sumar(MUEBLES[m.tipo].costo);
     return toast("Ese lugar se ocupó");
   }
   contar(`movió ${MUEBLES[m.tipo].e} ${MUEBLES[m.tipo].n}`);
 }
-
 async function guardar(clave) {
   const m = S.cuarto?.[clave]; if (!m) return;
   const ok = await api.tx("cuarto/" + clave, cur => (cur && cur.id === m.id) ? null : undefined);
   if (!ok) return;
-  await sumar(MUEBLES[m.tipo].costo);   // se devuelven los recursos
+  await sumar(MUEBLES[m.tipo].costo);
   contar(`guardó ${MUEBLES[m.tipo].e} ${MUEBLES[m.tipo].n}`);
 }
 
@@ -455,15 +588,19 @@ async function guardar(clave) {
    ========================================================= */
 function dibujar() {
   if (!S) return;
-  // Inventario compartido
-  $("inv").innerHTML = Object.entries(RES).map(([k, r]) =>
-    `<div title="${r.n}">${r.e} <b>${S.inv?.[k] || 0}</b></div>`).join("");
-  // Pareja
+  const cosecha = Object.keys(S.inv || {}).filter(k => k.startsWith("c_")).reduce((a, k) => a + cant(k), 0);
+  $("inv").innerHTML = ["madera", "flores", "monedas"].map(k =>
+    `<div title="${RES[k].n}">${RES[k].e} <b>${cant(k)}</b></div>`).join("") +
+    `<div title="Cosecha en la despensa">🧺 <b>${cosecha}</b></div>`;
   const p = pareja();
+  const donde = { casa: "en la casa 🛋️", granja: "en la granja 🌾", mercado: "en el mercado 🧺" };
   $("lblPareja").innerHTML = p
-    ? `<span class="punto ${p.online ? "on" : ""}"></span>${esc(p.nombre)}<br><small>${p.online ? (p.vista === "jardin" ? "en el jardín 🌳" : "en la casa 🛋️") : "desconectado"}</small>`
+    ? `<span class="punto ${p.online ? "on" : ""}"></span>${esc(p.nombre)}<br><small>${p.online ? (donde[p.vista] || "") : "desconectado"}</small>`
     : `<small>Esperando a tu pareja…<br>comparte el código 💌</small>`;
-  if (vista === "casa") dibujarCasa(); else dibujarJardin();
+  if (vista === "casa") dibujarCasa();
+  else if (vista === "granja") dibujarGranja();
+  else dibujarMercado();
+  dibujarHoja();
 }
 
 function dibujarCasa() {
@@ -488,50 +625,114 @@ function dibujarCasa() {
       <button class="btn sec" data-acc="guardar">📦 Guardar</button>
       <button class="btn sec" data-acc="cancelar">✕</button>` : (modo = null, `<span>Ese mueble ya no está.</span>`);
   }
-  else if (modo.tipo === "mover") barra = `<span>Toca dónde quieres moverlo</span><button class="btn sec" data-acc="cancelar">Cancelar</button>`;
+  else barra = `<span>Toca dónde quieres moverlo</span><button class="btn sec" data-acc="cancelar">Cancelar</button>`;
 
   $("vista").innerHTML = `
     <div class="cuarto">
       <div class="pared">🪟<span style="font-size:22px">🌼</span>🪟</div>
       <div class="piso">${celdas}</div>
     </div>
-    <div class="barra">${barra}</div>
-    ${verTienda ? tienda() : ""}`;
+    <div class="barra">${barra}</div>`;
 }
 
-function tienda() {
-  return `<div class="velo" data-acc="cerrar"><div class="hoja" data-stop>
-    <h2>🛠️ ¿Qué construimos?</h2>
-    <div class="cat">${Object.entries(MUEBLES).map(([k, m]) =>
-      `<button class="item" data-mueble="${k}" ${alcanza(m.costo) ? "" : "disabled"}>
-         <div class="e">${m.e}</div><div class="n">${m.n}</div><div class="c">${textoCosto(m.costo)}</div></button>`).join("")}
-    </div>
-    <button class="btn sec grande" data-acc="cerrar">Cerrar</button>
-  </div></div>`;
+// Cambia solo lo que cambió (así un toque nunca se pierde mientras todo crece)
+function parchar(el, cls, html) {
+  if (el.className !== cls) el.className = cls;
+  if (el._h !== html) { el._h = html; el.innerHTML = html; }
 }
+const tiempo = ms => { const s = Math.ceil(ms / 1000); return s >= 60 ? Math.ceil(s / 60) + " min" : s + "s"; };
 
-function dibujarJardin() {
+function dibujarGranja() {
   const ahora = api.ahora();
-  const jardin = Object.entries(S.jardin || []);
-  const html = jardin.map(([i, s]) => {
-    const F = FUENTES[s.tipo]; const listo = s.listoEn <= ahora;
-    if (listo) return { cls: "spot listo", inner: `${F.e}<small>${F.n}</small>` };
-    const falta = Math.ceil((s.listoEn - ahora) / 1000), pct = 100 - (falta / F.crece) * 100;
-    return { cls: "spot", inner: `${F.espera}<small>${falta}s</small><div class="prog"><i style="width:${Math.max(0, pct)}%"></i></div>` };
-  });
-  let caja = $("vista").querySelector(".jardin");
-  if (!caja || caja.children.length !== html.length) {
-    $("vista").innerHTML = `
-      <p class="ayuda">Toca lo que esté listo para recolectar. Todo lo que juntan va a la despensa compartida 🧺</p>
-      <div class="jardin">${jardin.map(([i]) => `<div data-spot="${i}"></div>`).join("")}</div>`;
-    caja = $("vista").querySelector(".jardin");
+  const bosque = Object.entries(S.jardin || []), huerto = Object.entries(S.huerto || []);
+  let v = $("vista").querySelector(".granja");
+  if (!v || v.querySelector(".bosque").children.length !== bosque.length || v.querySelector(".huerto").children.length !== huerto.length) {
+    $("vista").innerHTML = `<div class="granja">
+      <h3>🌾 Huerto</h3>
+      <div class="barra" id="barraG"></div>
+      <div class="huerto">${huerto.map(([i]) => `<div data-parcela="${i}"></div>`).join("")}</div>
+      <p class="ayuda">Toca la tierra para plantar · toca una planta para regarla 💧 (crece más rápido) · cuando brille, ¡cosecha!</p>
+      <h3>🌳 Bosque</h3>
+      <div class="bosque">${bosque.map(([i]) => `<div data-spot="${i}"></div>`).join("")}</div>
+    </div>`;
+    v = $("vista").querySelector(".granja");
   }
-  // Solo cambiamos lo que de verdad cambió (así los toques no se pierden)
-  html.forEach((h, n) => {
-    const el = caja.children[n];
-    if (el.className !== h.cls) el.className = h.cls;
-    if (el.innerHTML !== h.inner) el.innerHTML = h.inner;
+  // Barra de acciones
+  const maduras = huerto.filter(([, p]) => estadoParcela(p, ahora).fase === "madura").length;
+  let barra;
+  if (modo?.tipo === "plantar") {
+    const C = CULTIVOS[modo.cultivo];
+    barra = `<span>Toca tierra libre para plantar ${C.e} ${C.n} <small>(te quedan ${cant("s_" + modo.cultivo)} 🌰)</small></span>
+      <button class="btn sec chico" data-acc="semillas">Cambiar</button><button class="btn chico" data-acc="cancelar">Listo</button>`;
+  } else {
+    barra = `<span>Huerto compartido de ${PARCELAS} parcelas</span>
+      <button class="btn verde chico" data-acc="semillas">🌰 Plantar</button>
+      <button class="btn chico" data-acc="cosecharTodo" ${maduras ? "" : "disabled"}>🧺 Cosechar (${maduras})</button>`;
+  }
+  parchar(v.querySelector("#barraG"), "barra", barra);
+
+  // Parcelas
+  const pcs = v.querySelector(".huerto").children;
+  huerto.forEach(([i, p], n) => {
+    const st = estadoParcela(p, ahora);
+    let cls = "parcela", html;
+    if (st.fase === "vacia") { cls += " vacia" + (modo?.tipo === "plantar" ? " marcar" : ""); html = "+"; }
+    else {
+      if (p.regada) cls += " mojada";
+      const gota = p.regada ? `<span class="gota">💧</span>` : "";
+      if (st.fase === "madura") { cls += " madura"; html = `${st.C.e}<small>¡Listo!</small>`; }
+      else {
+        const dib = st.fase === "semilla" ? `<span class="semilla">• • •</span>` : st.fase === "brote" ? "🌱" : "🌿";
+        html = `${gota}${dib}<small>${tiempo(st.falta)}</small><div class="prog"><i style="width:${Math.round(st.avance * 100)}%"></i></div>`;
+      }
+    }
+    parchar(pcs[n], cls, html);
   });
+
+  // Bosque
+  const sps = v.querySelector(".bosque").children;
+  bosque.forEach(([i, s], n) => {
+    const F = FUENTES[s.tipo] || FUENTES.arbol;
+    if (s.listoEn <= ahora) return parchar(sps[n], "spot listo", `${F.e}<small>${F.n}</small>`);
+    const falta = s.listoEn - ahora, pct = Math.max(0, 100 - (falta / 1000 / F.crece) * 100);
+    parchar(sps[n], "spot", `${F.espera}<small>${tiempo(falta)}</small><div class="prog"><i style="width:${Math.round(pct)}%"></i></div>`);
+  });
+}
+
+function dibujarMercado() {
+  const enDespensa = Object.keys(CULTIVOS).filter(k => cant("c_" + k) > 0);
+  const despensa = enDespensa.length ? enDespensa.map(k => {
+    const C = CULTIVOS[k], n = cant("c_" + k);
+    return `<div class="fila"><div class="e">${C.e}</div><div class="t">${C.n} ×${n}<br><small>${C.venta} 🪙 c/u</small></div>
+      <button class="btn sec chico" data-acc="vender" data-c="${k}" data-n="1">Vender 1</button>
+      <button class="btn chico" data-acc="vender" data-c="${k}" data-n="${n}">Todo +${n * C.venta}🪙</button></div>`;
+  }).join("") : `<div class="vacio">Todavía no hay cosecha. ¡A plantar! 🌱</div>`;
+  const semillas = Object.entries(CULTIVOS).map(([k, C]) => `
+    <div class="fila"><div class="e">${C.e}</div>
+      <div class="t">${C.n} <small>· tienes ${cant("s_" + k)} 🌰</small><br><small>crece en ${tiempo(C.crece * 1000)} · ${C.res ? "da flores 🌸" : "se vende a " + C.venta + " 🪙"}</small></div>
+      <button class="btn verde chico" data-acc="comprar" data-c="${k}" ${cant("monedas") >= C.precio ? "" : "disabled"}>🌰 ${C.precio}🪙</button></div>`).join("");
+  $("vista").innerHTML = `
+    <h3>🧺 Despensa</h3><div class="lista">${despensa}</div>
+    <h3>🌰 Semillas</h3><div class="lista">${semillas}</div>
+    <p class="ayuda">Al cosechar siempre recuperas semillas, así el huerto nunca se acaba 🌾</p>`;
+}
+
+function dibujarHoja() {
+  if (!hoja) { $("hoja").innerHTML = ""; return; }
+  let cont;
+  if (hoja === "tienda") {
+    cont = `<h2>🛠️ ¿Qué construimos?</h2><div class="cat">${Object.entries(MUEBLES).map(([k, m]) =>
+      `<button class="item" data-mueble="${k}" ${alcanza(m.costo) ? "" : "disabled"}>
+         <div class="e">${m.e}</div><div class="n">${m.n}</div><div class="c">${textoCosto(m.costo)}</div></button>`).join("")}</div>`;
+  } else {
+    const tengo = Object.keys(CULTIVOS).filter(k => cant("s_" + k) > 0);
+    cont = `<h2>🌰 ¿Qué plantamos?</h2>` + (tengo.length ? `<div class="cat">${tengo.map(k => {
+      const C = CULTIVOS[k];
+      return `<button class="item" data-semilla="${k}"><div class="e">${C.e}</div><div class="n">${C.n}</div><div class="c">🌰 ${cant("s_" + k)} · ${tiempo(C.crece * 1000)}</div></button>`;
+    }).join("")}</div>` : `<div class="vacio">No tienen semillas. Cómprenlas en el 🧺 Mercado.</div>`);
+  }
+  const html = `<div class="velo" data-acc="cerrar"><div class="hoja">${cont}<button class="btn sec grande" data-acc="cerrar">Cerrar</button></div></div>`;
+  if ($("hoja")._h !== html) { $("hoja")._h = html; $("hoja").innerHTML = html; }
 }
 
 const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -543,66 +744,103 @@ function toast(t) {
   setTimeout(() => d.remove(), 3200);
 }
 function flotar(el, t) {
+  if (!el) return;
   const r = el.getBoundingClientRect(), d = document.createElement("div");
   d.className = "flota"; d.textContent = t;
-  d.style.left = (r.left + r.width / 2 - 30) + "px"; d.style.top = (r.top + 10) + "px";
+  d.style.left = (r.left + r.width / 2 - 24) + "px"; d.style.top = (r.top + 4) + "px";
   document.body.appendChild(d); setTimeout(() => d.remove(), 1000);
 }
 
 /* =========================================================
    9) TOQUES DEL JUGADOR
    ========================================================= */
-document.querySelector("nav").onclick = e => {
-  const b = e.target.closest("[data-ir]"); if (!b) return;
-  if (b.dataset.ir === "salir") { if (confirm("¿Salir de esta casa? (podrás volver con el código)")) location.reload(); return; }
-  vista = b.dataset.ir; modo = null; verTienda = false;
-  document.querySelectorAll("nav [data-ir]").forEach(x => x.classList.toggle("act", x === b));
-  api.poner("players/" + yo.id + "/vista", vista);
-  dibujar();
-};
-
 $("lblCodigo").onclick = async () => {
   const c = $("lblCodigo").textContent, txt = `¡Ven a nuestra casa! 🏡 Código: ${c}`;
   try { if (navigator.share) await navigator.share({ text: txt }); else { await navigator.clipboard.writeText(c); toast("Código copiado 📋"); } } catch (e) {}
 };
 
-$("vista").onclick = async e => {
+document.addEventListener("click", async e => {
   if (!S) return;
   const t = e.target;
-  const mb = t.closest("[data-mueble]");
-  if (mb) { modo = { tipo: "poner", mueble: mb.dataset.mueble }; verTienda = false; return dibujar(); }
 
+  // Navegación
+  const ir = t.closest("[data-ir]");
+  if (ir) {
+    if (ir.dataset.ir === "salir") { if (confirm("¿Salir de esta casa? (podrás volver con el código)")) location.reload(); return; }
+    vista = ir.dataset.ir; modo = null; hoja = null;
+    document.querySelectorAll("nav [data-ir]").forEach(x => x.classList.toggle("act", x === ir));
+    api.poner("players/" + yo.id + "/vista", vista);
+    $("vista").innerHTML = "";
+    return dibujar();
+  }
+
+  // Elegir mueble o semilla en la hoja
+  const mb = t.closest("[data-mueble]");
+  if (mb) { modo = { tipo: "poner", mueble: mb.dataset.mueble }; hoja = null; return dibujar(); }
+  const sb = t.closest("[data-semilla]");
+  if (sb) {
+    const destino = hoja?.parcela;
+    modo = { tipo: "plantar", cultivo: sb.dataset.semilla }; hoja = null; dibujar();
+    if (destino !== undefined) {
+      await plantar(destino, modo.cultivo, document.querySelector(`[data-parcela="${destino}"]`));
+      if (!cant("s_" + modo.cultivo)) modo = null;
+      dibujar();
+    }
+    return;
+  }
+
+  // Botones
   const acc = t.closest("[data-acc]");
-  if (acc && !(acc.classList.contains("velo") && t.closest("[data-stop]"))) {
+  if (acc && !(acc.classList.contains("velo") && t.closest(".hoja"))) {
     const a = acc.dataset.acc;
-    if (a === "tienda") verTienda = true;
-    if (a === "cerrar") verTienda = false;
+    if (a === "tienda") hoja = "tienda";
+    if (a === "semillas") hoja = { tipo: "semillas" };
+    if (a === "cerrar") hoja = null;
     if (a === "cancelar") modo = null;
     if (a === "mover") modo = { tipo: "mover", clave: modo.clave };
     if (a === "guardar") { const k = modo.clave; modo = null; await guardar(k); }
+    if (a === "cosecharTodo") await cosecharTodo();
+    if (a === "vender") await vender(acc.dataset.c, Number(acc.dataset.n));
+    if (a === "comprar") await comprar(acc.dataset.c);
     return dibujar();
   }
+
+  // Bosque
   const spot = t.closest("[data-spot]");
   if (spot) return recolectar(spot.dataset.spot, spot);
 
+  // Huerto
+  const pc = t.closest("[data-parcela]");
+  if (pc) {
+    const i = pc.dataset.parcela, st = estadoParcela(S.huerto?.[i], api.ahora());
+    if (st.fase === "vacia") {
+      if (modo?.tipo === "plantar") {
+        await plantar(i, modo.cultivo, pc);
+        if (!cant("s_" + modo.cultivo)) { modo = null; toast("Se acabaron esas semillas 🌰"); }
+      } else hoja = { tipo: "semillas", parcela: i };
+    } else if (st.fase === "madura") await cosechar(i, pc);
+    else if (!S.huerto[i].regada) await regar(i, pc);
+    else toast(`${st.C.e} ${st.C.n}: falta ${tiempo(st.falta)} (ya está regada 💧)`);
+    return dibujar();
+  }
+
+  // Habitación
   const celda = t.closest("[data-celda]");
   if (celda) {
     const [x, y] = celda.dataset.celda.split(",").map(Number), k = x + "_" + y;
     const ocupado = !!S.cuarto?.[k];
     if (modo?.tipo === "poner" && !ocupado) {
       await poner(x, y, modo.mueble);
-      if (!alcanza(MUEBLES[modo.mueble].costo)) modo = null;  // sin recursos para otro igual
+      if (!alcanza(MUEBLES[modo.mueble].costo)) modo = null;
     } else if (modo?.tipo === "mover" && !ocupado) {
       const desde = modo.clave; modo = null; await mover(desde, x, y);
-    } else if (ocupado) {
-      modo = { tipo: "sel", clave: k };
-    }
+    } else if (ocupado) modo = { tipo: "sel", clave: k };
     dibujar();
   }
-};
+});
 
-// El jardín se va actualizando solo (las plantas crecen en segundo plano)
-setInterval(() => { if (S && vista === "jardin") dibujarJardin(); }, 1000);
+// Todo sigue creciendo en segundo plano
+setInterval(() => { if (S && vista === "granja") dibujarGranja(); }, 1000);
 </script>
 </body>
 </html>
